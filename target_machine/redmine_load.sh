@@ -28,6 +28,7 @@ rake redmine:plugins:migrate RAILS_ENV=production
 cd "$backup_path"
 for f in *; do
     test -d "$f" && svnadmin load "$f" > "$backup_path/$f"
+done
 
 # Restart the bitnami stack
 ./srv/ctlscript.sh restart
