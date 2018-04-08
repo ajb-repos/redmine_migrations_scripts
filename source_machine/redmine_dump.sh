@@ -11,7 +11,7 @@ backup_path="/path/to/backups"
 # Create directory for backups if it doesn't exist
 mkdir -p $backup_path
 
-# Dump the redmine sql database.  "-t --insert-ignore --skip-opt" should create a dump with no DROP TABLE or CREATE TABLE and all INSERT changed to INSERT-IGNORE.  This should allow it to be merged with tictac's sql database.
+# Dump the redmine sql database.  "-t --insert-ignore --skip-opt" should create a dump with no DROP TABLE or CREATE TABLE and all INSERT changed to INSERT-IGNORE.  This should allow it to be merged with the new server's sql database.
 mysqldump -t --insert-ignore --skip-opt --user=$user --password=$password $db_name > $backup_path/$db_name-backup.sql
 
 # SVN backup options
