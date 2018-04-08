@@ -31,5 +31,5 @@ done
 scpUSER=""
 remoteSERVER=""
 
-# Copy backups to tictac - will require user password input - could(should) probably be done with keys instead?
+# Copy backups to new server - will require user password input - could(should) probably be done with keys instead?
 scp -r $backup_path $scpUSER@$remoteSERVER:/destination/path
