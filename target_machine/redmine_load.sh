@@ -9,25 +9,30 @@
 user=""
 password=""
 db_name=""
-name=""
 backup_path=""
 backup_name=""
 
 # Import the redmine database backup
-mysql --user=$user --password=$password $db_name < "$backup_path/$backup_name.sql"
+mysql --user=$user --password=$password $db_name < $backup_path/$backup_name.sql
 
 # Migrate database
 redmine_path=""
 cd $redmine_path
-ruby bin/rake db:migrate RAILS_ENV=production
+bundle exec ruby bin/rake db:migrate RAILS_ENV=production
 
 # Migrate plugins
-rake redmine:plugins:migrate RAILS_ENV=production
+bundle exec rake redmine:plugins:migrate RAILS_ENV=production
+
+# SVN variables
+svnBackup_path="$backup_path/svn_repos"
+dump_file="${filename}"
+repo_name="${dump_file%.*}"
 
 # Load SVN repos
-cd "$backup_path"
-for f in *; do
-    test -d "$f" && svnadmin load "$f" > "$backup_path/$f"
+cd "$svnBackup_path"
+for dump_file in *; do
+    svnadmin create "path/to/repos/$repo_name"
+    svnadmin load "$repo_name" < "$backup_path/$dump_file"
 done
 
 # Restart the bitnami stack
