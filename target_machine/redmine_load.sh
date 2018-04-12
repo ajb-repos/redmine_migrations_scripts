@@ -3,7 +3,7 @@
 # Script to run on new machine to load sql database and SVN repositories
 
 # Use the redmine bash - comment this out if not using the Bitnami Redmine stack
-./srv/use_redmine.sh
+/srv/use_redmine.sh
 
 # Database credentials and options
 user=""
@@ -25,18 +25,20 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
 # SVN variables
 svnBackup_path="$backup_path/svn_repos"
-dump_file="${filename}"
-repo_name="${dump_file%.*}"
+svnDump=$svnBackup_path/*.dump
 
 # Load SVN repos
 cd "$svnBackup_path"
-for dump_file in *; do
+for svnDump in *; do
+    svnDump_name=${svnDump##/*/}
+    repo_name=$(echo $svnDump_name | cut -f 1 -d '.')
+    rm -r "/path/to/repos/$repo_name"
     svnadmin create "path/to/repos/$repo_name"
-    svnadmin load "$repo_name" < "$backup_path/$dump_file"
+    svnadmin load "$repo_name" < "$backup_path/$svnDump_name"
 done
 
 # Restart the bitnami stack
-./srv/ctlscript.sh restart
+/srv/ctlscript.sh restart
 
 # Exit the redmine bash
 exit
